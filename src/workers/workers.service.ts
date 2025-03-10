@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateWorkerDto } from './dto/create-worker.dto';
 import { UpdateWorkerDto } from './dto/update-worker.dto';
 import { DrizzleService } from 'src/drizzle/drizzle.service';
@@ -26,22 +26,20 @@ export class WorkersService {
     return null;
   }
 
-  async findOne(id: string): Promise<WorkerDto | null> {
-    const worker = await this.drizzle.db
-      .select()
-      .from(workers)
-      .where(eq(workers.id, id));
+  async findOne(id: string): Promise<WorkerDto> {
+    const worker = await this.drizzle.db.query.workers.findFirst({
+      where: eq(workers.id, id),
+    });
 
-    if (!worker || worker.length !== 1) {
-      console.log('Worker not found');
-      return null;
+    if (!worker) {
+      throw new NotFoundException(`Worker with id ${id} not found.`);
     }
 
     return {
-      id: worker[0].id,
-      firstName: worker[0].firstName,
-      lastName: worker[0].lastName,
-      email: worker[0].email,
+      id: worker.id,
+      firstName: worker.firstName,
+      lastName: worker.lastName,
+      email: worker.email,
     };
   }
 
