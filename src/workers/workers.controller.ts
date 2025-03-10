@@ -10,6 +10,7 @@ import {
 import { WorkersService } from './workers.service';
 import { CreateWorkerDto } from './dto/create-worker.dto';
 import { UpdateWorkerDto } from './dto/update-worker.dto';
+import { WorkerDto } from './dto/worker.dto';
 
 @Controller('workers')
 export class WorkersController {
@@ -26,17 +27,20 @@ export class WorkersController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.workersService.findOne(id);
+  async findOne(@Param('id') id: string): Promise<WorkerDto> {
+    return await this.workersService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateWorkerDto: UpdateWorkerDto) {
-    return this.workersService.update(id, updateWorkerDto);
+  async update(
+    @Param('id') id: string,
+    @Body() updateWorkerDto: UpdateWorkerDto,
+  ) {
+    return await this.workersService.update(id, updateWorkerDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.workersService.remove(id);
+  async remove(@Param('id') id: string) {
+    return await this.workersService.remove(id);
   }
 }
