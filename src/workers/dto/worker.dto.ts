@@ -1,4 +1,4 @@
-export type Worker = {
+export type WorkerDto = {
   id: string;
   firstName: string;
   lastName: string;

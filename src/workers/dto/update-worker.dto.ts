@@ -1,3 +1,3 @@
 import { CreateWorkerDto } from './create-worker.dto';
 
-export type UpdateWorkerDto = CreateWorkerDto & {};
+export type UpdateWorkerDto = CreateWorkerDto;

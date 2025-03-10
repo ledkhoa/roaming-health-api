@@ -1,5 +1,3 @@
-export type CreateWorkerDto = {
-  firstName: string;
-  lastName: string;
-  email: string;
-};
+import { WorkerDto } from './worker.dto';
+
+export type CreateWorkerDto = Omit<WorkerDto, 'id'>;

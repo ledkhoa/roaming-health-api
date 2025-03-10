@@ -4,7 +4,7 @@ import { UpdateWorkerDto } from './dto/update-worker.dto';
 import { DrizzleService } from 'src/drizzle/drizzle.service';
 import { workers } from 'src/drizzle/schema';
 import { eq } from 'drizzle-orm';
-import { Worker } from './entities/worker.entity';
+import { WorkerDto } from './dto/worker.dto';
 
 @Injectable()
 export class WorkersService {
@@ -23,10 +23,10 @@ export class WorkersService {
   }
 
   async findAll() {
-    return 'null';
+    return null;
   }
 
-  async findOne(id: string): Promise<Worker | null> {
+  async findOne(id: string): Promise<WorkerDto | null> {
     const worker = await this.drizzle.db
       .select()
       .from(workers)
