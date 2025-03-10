@@ -16,27 +16,27 @@ export class WorkersController {
   constructor(private readonly workersService: WorkersService) {}
 
   @Post()
-  create(@Body() createWorkerDto: CreateWorkerDto) {
-    return this.workersService.create(createWorkerDto);
+  async create(@Body() createWorkerDto: CreateWorkerDto) {
+    return await this.workersService.create(createWorkerDto);
   }
 
   @Get()
-  findAll() {
-    return this.workersService.findAll();
+  async findAll() {
+    return await this.workersService.findAll();
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.workersService.findOne(+id);
+    return this.workersService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateWorkerDto: UpdateWorkerDto) {
-    return this.workersService.update(+id, updateWorkerDto);
+    return this.workersService.update(id, updateWorkerDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.workersService.remove(+id);
+    return this.workersService.remove(id);
   }
 }

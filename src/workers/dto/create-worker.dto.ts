@@ -1,1 +1,5 @@
-export class CreateWorkerDto {}
+export type CreateWorkerDto = {
+  firstName: string;
+  lastName: string;
+  email: string;
+};

@@ -1,26 +1,67 @@
 import { Injectable } from '@nestjs/common';
 import { CreateWorkerDto } from './dto/create-worker.dto';
 import { UpdateWorkerDto } from './dto/update-worker.dto';
+import { DrizzleService } from 'src/drizzle/drizzle.service';
+import { workers } from 'src/drizzle/schema';
+import { eq } from 'drizzle-orm';
+import { Worker } from './entities/worker.entity';
 
 @Injectable()
 export class WorkersService {
-  create(createWorkerDto: CreateWorkerDto) {
-    return 'This action adds a new worker';
+  constructor(private readonly drizzle: DrizzleService) {}
+
+  async create(createWorkerDto: CreateWorkerDto) {
+    return await this.drizzle.db
+      .insert(workers)
+      .values(createWorkerDto)
+      .returning({
+        id: workers.id,
+        firstName: workers.firstName,
+        lastName: workers.lastName,
+        email: workers.email,
+      });
   }
 
-  findAll() {
-    return `This action returns all workers`;
+  async findAll() {
+    return 'null';
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} worker`;
+  async findOne(id: string): Promise<Worker | null> {
+    const worker = await this.drizzle.db
+      .select()
+      .from(workers)
+      .where(eq(workers.id, id));
+
+    if (!worker || worker.length !== 1) {
+      console.log('Worker not found');
+      return null;
+    }
+
+    return {
+      id: worker[0].id,
+      firstName: worker[0].firstName,
+      lastName: worker[0].lastName,
+      email: worker[0].email,
+    };
   }
 
-  update(id: number, updateWorkerDto: UpdateWorkerDto) {
-    return `This action updates a #${id} worker`;
+  async update(id: string, updateWorkerDto: UpdateWorkerDto) {
+    return await this.drizzle.db
+      .update(workers)
+      .set({ ...updateWorkerDto })
+      .where(eq(workers.id, id))
+      .returning({
+        id: workers.id,
+        firstName: workers.firstName,
+        lastName: workers.lastName,
+        email: workers.email,
+      });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} worker`;
+  async remove(id: string) {
+    await this.drizzle.db
+      .update(workers)
+      .set({ isActive: false })
+      .where(eq(workers.id, id));
   }
 }
