@@ -3,4 +3,5 @@ export type WorkerDto = {
   firstName: string;
   lastName: string;
   email: string;
+  isActive: boolean;
 };

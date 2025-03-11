@@ -1,0 +1,1 @@
+ALTER TABLE "workers" ALTER COLUMN "is_active" SET NOT NULL;

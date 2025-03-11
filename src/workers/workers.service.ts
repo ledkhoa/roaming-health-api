@@ -2,9 +2,15 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateWorkerDto } from './dto/create-worker.dto';
 import { UpdateWorkerDto } from './dto/update-worker.dto';
 import { DrizzleService } from 'src/drizzle/drizzle.service';
-import { workers } from 'src/drizzle/schema';
-import { eq } from 'drizzle-orm';
+import { WorkersTable } from 'src/drizzle/schema';
+import { and, eq } from 'drizzle-orm';
 import { WorkerDto } from './dto/worker.dto';
+import {
+  getQueryPagination,
+  Page,
+  PaginatedResponse,
+} from 'src/shared/pagination';
+import { getQueryFilter, WorkersFilter } from './decorators/workers';
 
 @Injectable()
 export class WorkersService {
@@ -12,23 +18,42 @@ export class WorkersService {
 
   async create(createWorkerDto: CreateWorkerDto) {
     return await this.drizzle.db
-      .insert(workers)
+      .insert(WorkersTable)
       .values(createWorkerDto)
       .returning({
-        id: workers.id,
-        firstName: workers.firstName,
-        lastName: workers.lastName,
-        email: workers.email,
+        id: WorkersTable.id,
+        firstName: WorkersTable.firstName,
+        lastName: WorkersTable.lastName,
+        email: WorkersTable.email,
       });
   }
 
-  async findAll() {
-    return null;
+  async findAll(
+    page: Page,
+    filter: WorkersFilter,
+  ): Promise<PaginatedResponse<WorkerDto>> {
+    const queryFilters = getQueryFilter(filter);
+
+    const workers = await this.drizzle.db.query.WorkersTable.findMany({
+      columns: { created_at: false, updated_at: false },
+      ...getQueryPagination(page),
+      where: (_, { and }) => and(...queryFilters),
+    });
+
+    const total = await this.drizzle.db.$count(
+      WorkersTable,
+      and(...queryFilters),
+    );
+
+    return {
+      data: workers,
+      total,
+    };
   }
 
   async findOne(id: string): Promise<WorkerDto> {
-    const worker = await this.drizzle.db.query.workers.findFirst({
-      where: eq(workers.id, id),
+    const worker = await this.drizzle.db.query.WorkersTable.findFirst({
+      where: eq(WorkersTable.id, id),
     });
 
     if (!worker) {
@@ -40,26 +65,28 @@ export class WorkersService {
       firstName: worker.firstName,
       lastName: worker.lastName,
       email: worker.email,
+      isActive: worker.isActive,
     };
   }
 
   async update(id: string, updateWorkerDto: UpdateWorkerDto) {
     return await this.drizzle.db
-      .update(workers)
+      .update(WorkersTable)
       .set({ ...updateWorkerDto })
-      .where(eq(workers.id, id))
+      .where(eq(WorkersTable.id, id))
       .returning({
-        id: workers.id,
-        firstName: workers.firstName,
-        lastName: workers.lastName,
-        email: workers.email,
+        id: WorkersTable.id,
+        firstName: WorkersTable.firstName,
+        lastName: WorkersTable.lastName,
+        email: WorkersTable.email,
+        isActive: WorkersTable.isActive,
       });
   }
 
   async remove(id: string) {
     await this.drizzle.db
-      .update(workers)
+      .update(WorkersTable)
       .set({ isActive: false })
-      .where(eq(workers.id, id));
+      .where(eq(WorkersTable.id, id));
   }
 }

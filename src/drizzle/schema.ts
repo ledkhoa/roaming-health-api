@@ -12,12 +12,12 @@ const updatedAt = timestamp('updated_at')
   .defaultNow()
   .$onUpdate(() => new Date());
 
-export const workers = pgTable('workers', {
+export const WorkersTable = pgTable('workers', {
   id: uuid().defaultRandom().primaryKey(),
   firstName: varchar('first_name', { length: 255 }).notNull(),
   lastName: varchar('last_name', { length: 255 }).notNull(),
   email: varchar({ length: 255 }).notNull().unique(),
   created_at: createdAt,
   updated_at: updatedAt,
-  isActive: boolean('is_active').default(true),
+  isActive: boolean('is_active').default(true).notNull(),
 });
