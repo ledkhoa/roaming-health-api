@@ -12,7 +12,13 @@ import { CreateWorkerDto } from './dto/create-worker.dto';
 import { UpdateWorkerDto } from './dto/update-worker.dto';
 import { WorkerDto } from './dto/worker.dto';
 import { Page, PaginatedResponse, Pagination } from 'src/shared/pagination';
-import { WorkersRequest, WorkersFilter } from './decorators/workers';
+import {
+  WorkersFilterRequest,
+  WorkersFilter,
+  WorkersSortRequest,
+  WorkersSortFields,
+  WorkersSort,
+} from './decorators/workers';
 
 @Controller('workers')
 export class WorkersController {
@@ -26,9 +32,10 @@ export class WorkersController {
   @Get()
   async findAll(
     @Pagination() page: Page,
-    @WorkersRequest() filter: WorkersFilter,
+    @WorkersFilterRequest() filter: WorkersFilter,
+    @WorkersSortRequest(WorkersSortFields) sort: WorkersSort,
   ): Promise<PaginatedResponse<WorkerDto>> {
-    return await this.workersService.findAll(page, filter);
+    return await this.workersService.findAll(page, filter, sort);
   }
 
   @Get(':id')

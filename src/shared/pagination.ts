@@ -8,21 +8,23 @@ export const Pagination = createParamDecorator(
   (_data: unknown, ctx: ExecutionContext): Page => {
     const request = ctx.switchToHttp().getRequest();
     const take = parseOptionalInt(10, request.query['take']);
-    const skip = parseOptionalInt(0, request.query['skip']);
+    const page = parseOptionalInt(1, request.query['page']);
 
-    return { take, skip };
+    return { take, page };
   },
 );
 
 export function getQueryPagination(page: Page) {
+  const currentPage = page.page > 0 ? page.page - 1 : 0;
+
   return {
     limit: page.take,
-    offset: page.skip * page.take,
+    offset: currentPage * page.take,
   };
 }
 
 export type Page = {
-  skip: number;
+  page: number;
   take: number;
 };
 

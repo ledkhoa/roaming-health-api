@@ -3,14 +3,19 @@ import { CreateWorkerDto } from './dto/create-worker.dto';
 import { UpdateWorkerDto } from './dto/update-worker.dto';
 import { DrizzleService } from 'src/drizzle/drizzle.service';
 import { WorkersTable } from 'src/drizzle/schema';
-import { and, eq } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 import { WorkerDto } from './dto/worker.dto';
 import {
   getQueryPagination,
   Page,
   PaginatedResponse,
 } from 'src/shared/pagination';
-import { getQueryFilter, WorkersFilter } from './decorators/workers';
+import {
+  getQueryFilter,
+  getQuerySort,
+  WorkersFilter,
+  WorkersSort,
+} from './decorators/workers';
 
 @Injectable()
 export class WorkersService {
@@ -31,19 +36,18 @@ export class WorkersService {
   async findAll(
     page: Page,
     filter: WorkersFilter,
+    sort: WorkersSort,
   ): Promise<PaginatedResponse<WorkerDto>> {
     const queryFilters = getQueryFilter(filter);
 
     const workers = await this.drizzle.db.query.WorkersTable.findMany({
       columns: { created_at: false, updated_at: false },
       ...getQueryPagination(page),
-      where: (_, { and }) => and(...queryFilters),
+      where: () => queryFilters,
+      orderBy: () => getQuerySort(sort),
     });
 
-    const total = await this.drizzle.db.$count(
-      WorkersTable,
-      and(...queryFilters),
-    );
+    const total = await this.drizzle.db.$count(WorkersTable, queryFilters);
 
     return {
       data: workers,
