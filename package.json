@@ -19,7 +19,9 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate"
+    "db:migrate": "drizzle-kit migrate",
+    "db:seed": "npx tsx ./seed/seed.ts",
+    "db:delete": "npx tsx ./seed/delete.ts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^0.10.4",
@@ -28,7 +30,9 @@
     "@nestjs/core": "^11.0.1",
     "@nestjs/mapped-types": "*",
     "@nestjs/platform-express": "^11.0.1",
+    "dotenv": "^16.4.7",
     "drizzle-orm": "^0.40.0",
+    "drizzle-seed": "^0.3.1",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1"
   },
