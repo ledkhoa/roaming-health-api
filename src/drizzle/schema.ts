@@ -21,3 +21,14 @@ export const WorkersTable = pgTable('workers', {
   updated_at: updatedAt,
   isActive: boolean('is_active').default(true).notNull(),
 });
+
+export const WorkplacesTable = pgTable('workplaces', {
+  id: uuid().defaultRandom().primaryKey(),
+  name: varchar({ length: 255 }).notNull(),
+  address1: varchar({ length: 255 }).notNull(),
+  address2: varchar({ length: 128 }).notNull(),
+  city: varchar({ length: 128 }).notNull(),
+  state: varchar({ length: 13 }).notNull(),
+  zip: varchar({ length: 5 }).notNull(),
+  isActive: boolean('is_active').default(false).notNull(),
+});

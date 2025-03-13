@@ -11,17 +11,7 @@ const main = async () => {
   const db = drizzle(sql, { schema });
 
   console.log('Seeding Workers');
-  await seed(db, schema).refine((funcs) => ({
-    WorkersTable: {
-      count: 100,
-      columns: {
-        firstName: funcs.firstName(),
-        lastName: funcs.lastName(),
-        email: funcs.email(),
-        isActive: funcs.boolean(),
-      },
-    },
-  }));
+  await seed(db, schema.WorkersTable, { count: 25 });
   console.log('Finished seeding Workers');
 
   console.log('Finished seeding!');
