@@ -26,7 +26,7 @@ export const WorkplacesTable = pgTable('workplaces', {
   id: uuid().defaultRandom().primaryKey(),
   name: varchar({ length: 255 }).notNull(),
   address1: varchar({ length: 255 }).notNull(),
-  address2: varchar({ length: 128 }).notNull(),
+  address2: varchar({ length: 128 }),
   city: varchar({ length: 128 }).notNull(),
   state: varchar({ length: 13 }).notNull(),
   zip: varchar({ length: 5 }).notNull(),
