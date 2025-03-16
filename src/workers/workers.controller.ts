@@ -18,7 +18,7 @@ import {
   WorkersSortRequest,
   WorkersSortFields,
   WorkersSort,
-} from './decorators/workers';
+} from './decorators/workers.decorator';
 
 @Controller('workers')
 export class WorkersController {

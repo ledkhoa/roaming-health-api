@@ -15,7 +15,7 @@ import {
   getQuerySort,
   WorkersFilter,
   WorkersSort,
-} from './decorators/workers';
+} from './decorators/workers.decorator';
 
 @Injectable()
 export class WorkersService {

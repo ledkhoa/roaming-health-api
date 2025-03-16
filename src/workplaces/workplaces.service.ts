@@ -10,7 +10,7 @@ import {
   getQuerySort,
   WorkplacesFilter,
   WorkplacesSort,
-} from './decorators/workplaces';
+} from './decorators/workplaces.decorator';
 import {
   Page,
   PaginatedResponse,

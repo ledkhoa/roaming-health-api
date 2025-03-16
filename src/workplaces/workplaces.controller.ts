@@ -17,7 +17,7 @@ import {
   WorkplacesSort,
   WorkplacesSortFields,
   WorkplacesSortRequest,
-} from './decorators/workplaces';
+} from './decorators/workplaces.decorator';
 
 @Controller('workplaces')
 export class WorkplacesController {
