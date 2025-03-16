@@ -10,6 +10,14 @@ import {
 import { WorkplacesService } from './workplaces.service';
 import { CreateWorkplaceDto } from './dto/create-workplace.dto';
 import { UpdateWorkplaceDto } from './dto/update-workplace.dto';
+import { Page, Pagination } from 'src/shared/pagination';
+import {
+  WorkplacesFilter,
+  WorkplacesFilterRequest,
+  WorkplacesSort,
+  WorkplacesSortFields,
+  WorkplacesSortRequest,
+} from './decorators/workplaces';
 
 @Controller('workplaces')
 export class WorkplacesController {
@@ -21,8 +29,12 @@ export class WorkplacesController {
   }
 
   @Get()
-  async findAll() {
-    return await this.workplacesService.findAll();
+  async findAll(
+    @Pagination() page: Page,
+    @WorkplacesFilterRequest() filter: WorkplacesFilter,
+    @WorkplacesSortRequest(WorkplacesSortFields) sort: WorkplacesSort,
+  ) {
+    return await this.workplacesService.findAll(page, filter, sort);
   }
 
   @Get(':id')

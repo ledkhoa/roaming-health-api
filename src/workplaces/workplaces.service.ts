@@ -5,6 +5,17 @@ import { DrizzleService } from 'src/drizzle/drizzle.service';
 import { WorkplacesTable } from 'src/drizzle/schema';
 import { eq } from 'drizzle-orm';
 import { WorkplaceDto } from './dto/workplace.dto';
+import {
+  getQueryFilter,
+  getQuerySort,
+  WorkplacesFilter,
+  WorkplacesSort,
+} from './decorators/workplaces';
+import {
+  Page,
+  PaginatedResponse,
+  getQueryPagination,
+} from 'src/shared/pagination';
 
 @Injectable()
 export class WorkplacesService {
@@ -25,8 +36,26 @@ export class WorkplacesService {
       });
   }
 
-  findAll() {
-    return `This action returns all workplaces`;
+  async findAll(
+    page: Page,
+    filter: WorkplacesFilter,
+    sort: WorkplacesSort,
+  ): Promise<PaginatedResponse<WorkplaceDto>> {
+    const queryFilters = getQueryFilter(filter);
+
+    const workplaces = await this.drizzle.db.query.WorkplacesTable.findMany({
+      columns: { created_at: false, updated_at: false },
+      ...getQueryPagination(page),
+      where: () => queryFilters,
+      orderBy: () => getQuerySort(sort),
+    });
+
+    const total = await this.drizzle.db.$count(WorkplacesTable, queryFilters);
+
+    return {
+      data: workplaces,
+      total,
+    };
   }
 
   async findOne(id: string): Promise<WorkplaceDto> {
@@ -42,7 +71,7 @@ export class WorkplacesService {
       id: workplace.id,
       name: workplace.name,
       address1: workplace.address1,
-      address2: workplace.address2 ?? undefined,
+      address2: workplace.address2,
       city: workplace.city,
       state: workplace.state,
       zip: workplace.zip,

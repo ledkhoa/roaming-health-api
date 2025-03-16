@@ -30,5 +30,7 @@ export const WorkplacesTable = pgTable('workplaces', {
   city: varchar({ length: 128 }).notNull(),
   state: varchar({ length: 13 }).notNull(),
   zip: varchar({ length: 5 }).notNull(),
+  created_at: createdAt,
+  updated_at: updatedAt,
   isActive: boolean('is_active').default(false).notNull(),
 });
