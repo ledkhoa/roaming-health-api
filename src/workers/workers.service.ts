@@ -15,7 +15,7 @@ import {
   getQuerySort,
   WorkersFilter,
   WorkersSort,
-} from './decorators/workers';
+} from './decorators/workers.decorator';
 
 @Injectable()
 export class WorkersService {
@@ -88,9 +88,13 @@ export class WorkersService {
   }
 
   async remove(id: string) {
-    await this.drizzle.db
+    const removed = await this.drizzle.db
       .update(WorkersTable)
       .set({ isActive: false })
       .where(eq(WorkersTable.id, id));
+
+    if (removed.rowCount === 0) {
+      throw new NotFoundException(`Worker with id ${id} not found.`);
+    }
   }
 }

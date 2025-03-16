@@ -10,19 +10,15 @@ const main = async () => {
   const sql = neon(process.env.NEON_DATABASE_URL!);
   const db = drizzle(sql, { schema });
 
-  console.log('Seeding Workers');
+  console.log('Begin seeding');
   await seed(db, schema).refine((funcs) => ({
     WorkersTable: {
       count: 100,
-      columns: {
-        firstName: funcs.firstName(),
-        lastName: funcs.lastName(),
-        email: funcs.email(),
-        isActive: funcs.boolean(),
-      },
+    },
+    WorkplacesTable: {
+      count: 25,
     },
   }));
-  console.log('Finished seeding Workers');
 
   console.log('Finished seeding!');
 };
