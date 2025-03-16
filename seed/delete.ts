@@ -15,6 +15,10 @@ const main = async () => {
   await db.delete(schema.WorkersTable);
   console.log('Finished deleting Workers');
 
+  console.log('Deleting Workplaces');
+  await db.delete(schema.WorkplacesTable);
+  console.log('Finished deleting Workplaces');
+
   console.log('Finished deleting!');
 };
 
