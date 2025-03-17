@@ -21,9 +21,12 @@ export const WorkplacesFilterRequest = createParamDecorator(
   },
 );
 
-export function getQueryFilter(filter: WorkplacesFilter) {
-  const { name, city, state } = filter;
-
+export function getQueryFilter({
+  name,
+  city,
+  state,
+  isActive,
+}: WorkplacesFilter) {
   const filters: SQL[] = [];
 
   if (name) {
@@ -38,8 +41,8 @@ export function getQueryFilter(filter: WorkplacesFilter) {
     filters.push(ilike(WorkplacesTable.state, `%${state}%`));
   }
 
-  if (filter.isActive !== undefined) {
-    filters.push(eq(WorkplacesTable.isActive, filter.isActive));
+  if (isActive !== undefined) {
+    filters.push(eq(WorkplacesTable.isActive, isActive));
   }
 
   return and(...filters);
@@ -76,9 +79,7 @@ export const WorkplacesSortRequest = createParamDecorator(
   },
 );
 
-export function getQuerySort(sort: WorkplacesSort) {
-  const { sortBy, dir } = sort;
-
+export function getQuerySort({ sortBy, dir }: WorkplacesSort) {
   const sortOrder = dir === 'desc' ? desc : asc;
 
   const orderBy: SQL[] = [];

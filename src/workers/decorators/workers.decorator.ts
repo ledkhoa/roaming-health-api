@@ -21,9 +21,12 @@ export const WorkersFilterRequest = createParamDecorator(
   },
 );
 
-export function getQueryFilter(filter: WorkersFilter) {
-  const { firstName, lastName, email } = filter;
-
+export function getQueryFilter({
+  firstName,
+  lastName,
+  email,
+  isActive,
+}: WorkersFilter) {
   const filters: SQL[] = [];
 
   if (firstName) {
@@ -38,8 +41,8 @@ export function getQueryFilter(filter: WorkersFilter) {
     filters.push(ilike(WorkersTable.email, `%${email}%`));
   }
 
-  if (filter.isActive !== undefined) {
-    filters.push(eq(WorkersTable.isActive, filter.isActive));
+  if (isActive !== undefined) {
+    filters.push(eq(WorkersTable.isActive, isActive));
   }
 
   return and(...filters);
@@ -76,9 +79,7 @@ export const WorkersSortRequest = createParamDecorator(
   },
 );
 
-export function getQuerySort(sort: WorkersSort) {
-  const { sortBy, dir } = sort;
-
+export function getQuerySort({ sortBy, dir }: WorkersSort) {
   const sortOrder = dir === 'desc' ? desc : asc;
 
   const orderBy: SQL[] = [];
