@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  HttpCode,
 } from '@nestjs/common';
 import { WorkplacesService } from './workplaces.service';
 import { CreateWorkplaceDto } from './dto/create-workplace.dto';
@@ -51,6 +52,7 @@ export class WorkplacesController {
   }
 
   @Delete(':id')
+  @HttpCode(204)
   async remove(@Param('id') id: string) {
     return await this.workplacesService.remove(id);
   }
