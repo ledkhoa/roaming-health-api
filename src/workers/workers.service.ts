@@ -22,7 +22,7 @@ export class WorkersService {
   constructor(private readonly drizzle: DrizzleService) {}
 
   async create(createWorkerDto: CreateWorkerDto) {
-    return await this.drizzle.db
+    const created = await this.drizzle.db
       .insert(WorkersTable)
       .values(createWorkerDto)
       .returning({
@@ -30,7 +30,10 @@ export class WorkersService {
         firstName: WorkersTable.firstName,
         lastName: WorkersTable.lastName,
         email: WorkersTable.email,
+        isActive: WorkersTable.isActive,
       });
+
+    return created[0];
   }
 
   async findAll(
@@ -89,8 +92,7 @@ export class WorkersService {
 
   async remove(id: string) {
     const removed = await this.drizzle.db
-      .update(WorkersTable)
-      .set({ isActive: false })
+      .delete(WorkersTable)
       .where(eq(WorkersTable.id, id));
 
     if (removed.rowCount === 0) {

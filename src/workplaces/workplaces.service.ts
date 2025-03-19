@@ -97,8 +97,7 @@ export class WorkplacesService {
 
   async remove(id: string) {
     const removed = await this.drizzle.db
-      .update(WorkplacesTable)
-      .set({ isActive: false })
+      .delete(WorkplacesTable)
       .where(eq(WorkplacesTable.id, id));
 
     if (removed.rowCount === 0) {
