@@ -27,10 +27,6 @@ export class WorkersService {
       .values(createWorkerDto)
       .returning({
         id: WorkersTable.id,
-        firstName: WorkersTable.firstName,
-        lastName: WorkersTable.lastName,
-        email: WorkersTable.email,
-        isActive: WorkersTable.isActive,
       });
 
     return created[0];
@@ -83,10 +79,6 @@ export class WorkersService {
       .where(eq(WorkersTable.id, id))
       .returning({
         id: WorkersTable.id,
-        firstName: WorkersTable.firstName,
-        lastName: WorkersTable.lastName,
-        email: WorkersTable.email,
-        isActive: WorkersTable.isActive,
       });
   }
 
@@ -94,6 +86,8 @@ export class WorkersService {
     const removed = await this.drizzle.db
       .delete(WorkersTable)
       .where(eq(WorkersTable.id, id));
+
+    console.log('removed!', removed);
 
     if (removed.rowCount === 0) {
       throw new NotFoundException(`Worker with id ${id} not found.`);
