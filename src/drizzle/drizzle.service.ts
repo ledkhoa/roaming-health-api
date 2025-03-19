@@ -5,11 +5,11 @@ import * as schema from './schema';
 
 @Injectable()
 export class DrizzleService {
-  sql: NeonQueryFunction<false, false>;
+  client: NeonQueryFunction<false, false>;
   db: NeonHttpDatabase<typeof schema>;
 
   constructor() {
-    this.sql = neon(process.env.NEON_DATABASE_URL!);
-    this.db = drizzle(this.sql, { schema });
+    this.client = neon(process.env.NEON_DATABASE_URL!);
+    this.db = drizzle(this.client, { schema });
   }
 }
