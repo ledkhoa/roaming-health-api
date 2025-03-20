@@ -20,6 +20,7 @@ import {
   WorkersSortFields,
   WorkersSort,
 } from './decorators/workers.decorator';
+import { ParseUUIDPipe } from '@nestjs/common';
 
 @Controller('workers')
 export class WorkersController {
@@ -40,13 +41,16 @@ export class WorkersController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<WorkerDto> {
+  async findOne(
+    @Param('id', new ParseUUIDPipe())
+    id: string,
+  ): Promise<WorkerDto> {
     return await this.workersService.findOne(id);
   }
 
   @Patch(':id')
   async update(
-    @Param('id') id: string,
+    @Param('id', new ParseUUIDPipe()) id: string,
     @Body() updateWorkerDto: UpdateWorkerDto,
   ) {
     return await this.workersService.update(id, updateWorkerDto);
@@ -54,7 +58,7 @@ export class WorkersController {
 
   @Delete(':id')
   @HttpCode(204)
-  async remove(@Param('id') id: string) {
+  async remove(@Param('id', new ParseUUIDPipe()) id: string) {
     await this.workersService.remove(id);
   }
 }
