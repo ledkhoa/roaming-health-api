@@ -7,10 +7,17 @@ import {
   Param,
   Delete,
   HttpCode,
+  UsePipes,
 } from '@nestjs/common';
 import { WorkersService } from './workers.service';
-import { CreateWorkerDto } from './dto/create-worker.dto';
-import { UpdateWorkerDto } from './dto/update-worker.dto';
+import {
+  CreateWorkerDto,
+  createWorkerValidationSchema,
+} from './dto/create-worker.dto';
+import {
+  UpdateWorkerDto,
+  updateWorkerValidationSchema,
+} from './dto/update-worker.dto';
 import { WorkerDto } from './dto/worker.dto';
 import { Page, PaginatedResponse, Pagination } from 'src/shared/pagination';
 import {
@@ -21,12 +28,14 @@ import {
   WorkersSort,
 } from './decorators/workers.decorator';
 import { ParseUUIDPipe } from '@nestjs/common';
+import { ZodValidationPipe } from 'src/shared/pipes/zod-validation.pipe';
 
 @Controller('workers')
 export class WorkersController {
   constructor(private readonly workersService: WorkersService) {}
 
   @Post()
+  @UsePipes(new ZodValidationPipe(createWorkerValidationSchema))
   async create(@Body() createWorkerDto: CreateWorkerDto) {
     return await this.workersService.create(createWorkerDto);
   }
@@ -51,9 +60,10 @@ export class WorkersController {
   @Patch(':id')
   async update(
     @Param('id', new ParseUUIDPipe()) id: string,
-    @Body() updateWorkerDto: UpdateWorkerDto,
+    @Body(new ZodValidationPipe(updateWorkerValidationSchema))
+    updateWorkerDto: UpdateWorkerDto,
   ) {
-    return await this.workersService.update(id, updateWorkerDto);
+    await this.workersService.update(id, updateWorkerDto);
   }
 
   @Delete(':id')

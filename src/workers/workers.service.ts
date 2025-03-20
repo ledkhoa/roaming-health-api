@@ -73,7 +73,7 @@ export class WorkersService {
   }
 
   async update(id: string, updateWorkerDto: UpdateWorkerDto) {
-    return await this.drizzle.db
+    await this.drizzle.db
       .update(WorkersTable)
       .set({ ...updateWorkerDto })
       .where(eq(WorkersTable.id, id))
