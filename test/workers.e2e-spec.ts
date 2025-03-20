@@ -144,10 +144,23 @@ describe('Workers (e2e)', () => {
         });
     });
 
-    it('should fail to get worker by id', () => {
+    it('should fail to find worker by id', () => {
       const id = faker.string.uuid();
 
       return request(app.getHttpServer()).get(`/workers/${id}`).expect(404);
+    });
+
+    it('should fail with invalid id', () => {
+      const id = 'invalid-uuid';
+
+      return request(app.getHttpServer())
+        .get(`/workers/${id}`)
+        .expect(400)
+        .expect((response) => {
+          expect(response.body.message).toBe(
+            'Validation failed (uuid is expected)',
+          );
+        });
     });
   });
 
@@ -184,6 +197,19 @@ describe('Workers (e2e)', () => {
           expect(recordEmail).toBe(updatedEmail);
         });
     });
+
+    it('should fail with invalid id', () => {
+      const id = 'invalid-uuid';
+
+      return request(app.getHttpServer())
+        .patch(`/workers/${id}`)
+        .expect(400)
+        .expect((response) => {
+          expect(response.body.message).toBe(
+            'Validation failed (uuid is expected)',
+          );
+        });
+    });
   });
 
   describe('DELETE', () => {
@@ -208,6 +234,19 @@ describe('Workers (e2e)', () => {
       const id = faker.string.uuid();
 
       return request(app.getHttpServer()).delete(`/workers/${id}`).expect(404);
+    });
+
+    it('should fail with invalid id', () => {
+      const id = 'invalid-uuid';
+
+      return request(app.getHttpServer())
+        .delete(`/workers/${id}`)
+        .expect(400)
+        .expect((response) => {
+          expect(response.body.message).toBe(
+            'Validation failed (uuid is expected)',
+          );
+        });
     });
   });
 
