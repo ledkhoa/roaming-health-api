@@ -83,14 +83,11 @@ export class WorkersService {
   }
 
   async remove(id: string) {
-    const removed = await this.drizzle.db
-      .delete(WorkersTable)
-      .where(eq(WorkersTable.id, id));
+    const worker = await this.findOne(id);
 
-    console.log('removed!', removed);
-
-    if (removed.rowCount === 0) {
+    if (!worker) {
       throw new NotFoundException(`Worker with id ${id} not found.`);
     }
+    await this.drizzle.db.delete(WorkersTable).where(eq(WorkersTable.id, id));
   }
 }

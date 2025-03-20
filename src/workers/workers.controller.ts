@@ -55,6 +55,6 @@ export class WorkersController {
   @Delete(':id')
   @HttpCode(204)
   async remove(@Param('id') id: string) {
-    return await this.workersService.remove(id);
+    await this.workersService.remove(id);
   }
 }
