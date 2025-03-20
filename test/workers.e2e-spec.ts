@@ -47,7 +47,7 @@ describe('Workers (e2e)', () => {
   });
 
   describe('POST', () => {
-    it('should create a Worker', () => {
+    it('should create a worker', () => {
       const worker: CreateWorkerDto = {
         firstName: faker.person.firstName(),
         lastName: faker.person.lastName(),
@@ -73,8 +73,7 @@ describe('Workers (e2e)', () => {
         });
     });
 
-    // TODO handle error in api
-    it('should fail to create a Worker', () => {
+    it('should fail to create a worker without required property', () => {
       const worker = {
         firstName: faker.person.firstName(),
         lastName: faker.person.lastName(),
@@ -83,7 +82,10 @@ describe('Workers (e2e)', () => {
       return request(app.getHttpServer())
         .post('/workers')
         .send(worker)
-        .expect(500);
+        .expect(400)
+        .expect((response) => {
+          expect(response.body.message).toContain("Required: 'email'");
+        });
     });
   });
 
@@ -95,7 +97,7 @@ describe('Workers (e2e)', () => {
         .expect({ data: [], total: 0 });
     });
 
-    it('should return 1 worker', async () => {
+    it('should get all workers', async () => {
       const worker: CreateWorkerDto = {
         firstName: faker.person.firstName(),
         lastName: faker.person.lastName(),
@@ -144,7 +146,7 @@ describe('Workers (e2e)', () => {
         });
     });
 
-    it('should fail to find worker by id', () => {
+    it("should not find worker if id doesn't exist", () => {
       const id = faker.string.uuid();
 
       return request(app.getHttpServer()).get(`/workers/${id}`).expect(404);
@@ -198,11 +200,35 @@ describe('Workers (e2e)', () => {
         });
     });
 
-    it('should fail with invalid id', () => {
-      const id = 'invalid-uuid';
+    it('should fail to update a worker without required property', () => {
+      const id = faker.string.uuid();
+
+      const worker = {
+        firstName: faker.person.firstName(),
+        email: faker.internet.email(),
+      };
 
       return request(app.getHttpServer())
         .patch(`/workers/${id}`)
+        .send(worker)
+        .expect(400)
+        .expect((response) => {
+          expect(response.body.message).toContain("Required: 'lastName'");
+        });
+    });
+
+    it('should fail with invalid id', () => {
+      const id = 'invalid-uuid';
+
+      const worker: CreateWorkerDto = {
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
+        email: faker.internet.email(),
+      };
+
+      return request(app.getHttpServer())
+        .patch(`/workers/${id}`)
+        .send(worker)
         .expect(400)
         .expect((response) => {
           expect(response.body.message).toBe(
@@ -230,7 +256,7 @@ describe('Workers (e2e)', () => {
       return request(app.getHttpServer()).delete(`/workers/${id}`).expect(204);
     });
 
-    it('should fail to delete a worker', () => {
+    it("should fail to delete a worker if id doesn't exist", () => {
       const id = faker.string.uuid();
 
       return request(app.getHttpServer()).delete(`/workers/${id}`).expect(404);
