@@ -204,8 +204,7 @@ describe('Workers (e2e)', () => {
       return request(app.getHttpServer()).delete(`/workers/${id}`).expect(204);
     });
 
-    // TODO: This doesn't work due to different apis for drizzle client
-    it.skip('should fail to delete a worker', () => {
+    it('should fail to delete a worker', () => {
       const id = faker.string.uuid();
 
       return request(app.getHttpServer()).delete(`/workers/${id}`).expect(404);
