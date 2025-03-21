@@ -22,18 +22,14 @@ export class WorkplacesService {
   constructor(private drizzle: DrizzleService) {}
 
   async create(createWorkplaceDto: CreateWorkplaceDto) {
-    return await this.drizzle.db
+    const workplace = await this.drizzle.db
       .insert(WorkplacesTable)
       .values(createWorkplaceDto)
       .returning({
         id: WorkplacesTable.id,
-        name: WorkplacesTable.name,
-        address1: WorkplacesTable.address1,
-        address2: WorkplacesTable.address2,
-        city: WorkplacesTable.city,
-        state: WorkplacesTable.state,
-        zip: WorkplacesTable.zip,
       });
+
+    return workplace[0];
   }
 
   async findAll(
@@ -96,12 +92,10 @@ export class WorkplacesService {
   }
 
   async remove(id: string) {
-    const removed = await this.drizzle.db
+    await this.findOne(id);
+
+    await this.drizzle.db
       .delete(WorkplacesTable)
       .where(eq(WorkplacesTable.id, id));
-
-    if (removed.rowCount === 0) {
-      throw new NotFoundException(`Workplace with id ${id} not found.`);
-    }
   }
 }

@@ -7,10 +7,18 @@ import {
   Param,
   Delete,
   HttpCode,
+  UsePipes,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import { WorkplacesService } from './workplaces.service';
-import { CreateWorkplaceDto } from './dto/create-workplace.dto';
-import { UpdateWorkplaceDto } from './dto/update-workplace.dto';
+import {
+  CreateWorkplaceDto,
+  createWorkplaceValidationSchema,
+} from './dto/create-workplace.dto';
+import {
+  updatedWorkplaceValidationSchema,
+  UpdateWorkplaceDto,
+} from './dto/update-workplace.dto';
 import { Page, Pagination } from 'src/shared/pagination';
 import {
   WorkplacesFilter,
@@ -19,12 +27,14 @@ import {
   WorkplacesSortFields,
   WorkplacesSortRequest,
 } from './decorators/workplaces.decorator';
+import { ZodValidationPipe } from 'src/shared/pipes/zod-validation.pipe';
 
 @Controller('workplaces')
 export class WorkplacesController {
   constructor(private readonly workplacesService: WorkplacesService) {}
 
   @Post()
+  @UsePipes(new ZodValidationPipe(createWorkplaceValidationSchema))
   async create(@Body() createWorkplaceDto: CreateWorkplaceDto) {
     return await this.workplacesService.create(createWorkplaceDto);
   }
@@ -39,21 +49,22 @@ export class WorkplacesController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string) {
+  async findOne(@Param('id', new ParseUUIDPipe()) id: string) {
     return await this.workplacesService.findOne(id);
   }
 
   @Patch(':id')
   async update(
-    @Param('id') id: string,
-    @Body() updateWorkplaceDto: UpdateWorkplaceDto,
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body(new ZodValidationPipe(updatedWorkplaceValidationSchema))
+    updateWorkplaceDto: UpdateWorkplaceDto,
   ) {
-    return await this.workplacesService.update(id, updateWorkplaceDto);
+    await this.workplacesService.update(id, updateWorkplaceDto);
   }
 
   @Delete(':id')
   @HttpCode(204)
-  async remove(@Param('id') id: string) {
-    return await this.workplacesService.remove(id);
+  async remove(@Param('id', new ParseUUIDPipe()) id: string) {
+    await this.workplacesService.remove(id);
   }
 }
