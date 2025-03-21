@@ -12,7 +12,7 @@ import { eq } from 'drizzle-orm';
 import { faker } from '@faker-js/faker';
 import { CreateWorkplaceDto } from 'src/workplaces/dto/create-workplace.dto';
 
-describe('Workplaces (e2e)', () => {
+describe('Shifts (e2e)', () => {
   let app: INestApplication<App>;
   let drizzleMock: DrizzleService;
   let db: PgliteDatabase<typeof schema>;
@@ -47,8 +47,8 @@ describe('Workplaces (e2e)', () => {
   });
 
   describe('POST', () => {
-    it('should create a workplace', () => {
-      const workplace: CreateWorkplaceDto = {
+    it('should create a shift', () => {
+      const shift: CreateWorkplaceDto = {
         name: faker.company.name(),
         address1: faker.location.streetAddress(),
         city: faker.location.city(),
@@ -58,8 +58,8 @@ describe('Workplaces (e2e)', () => {
       };
 
       return request(app.getHttpServer())
-        .post('/workplaces')
-        .send(workplace)
+        .post('/shifts')
+        .send(shift)
         .expect(201)
         .expect(async (response) => {
           expect(response.body.id).toBeDefined();
@@ -69,14 +69,14 @@ describe('Workplaces (e2e)', () => {
             where: eq(schema.WorkplacesTable.id, workplaceId),
           });
           expect(record).toMatchObject({
-            ...workplace,
+            ...shift,
             id: workplaceId,
           });
         });
     });
 
-    it('should fail to create a workplace without required property', () => {
-      const workplace = {
+    it('should fail to create a shift without required property', () => {
+      const shift = {
         name: faker.company.name(),
         city: faker.location.city(),
         state: faker.location.state().substring(0, 12),
@@ -85,8 +85,8 @@ describe('Workplaces (e2e)', () => {
       };
 
       return request(app.getHttpServer())
-        .post('/workplaces')
-        .send(workplace)
+        .post('/shifts')
+        .send(shift)
         .expect(400)
         .expect((response) => {
           expect(response.body.message).toContain("Required: 'address1'");
@@ -95,14 +95,14 @@ describe('Workplaces (e2e)', () => {
   });
 
   describe('GET', () => {
-    it('should return no workplaces', () => {
+    it('should return no shifts', () => {
       return request(app.getHttpServer())
-        .get('/workplaces')
+        .get('/shifts')
         .expect(200)
         .expect({ data: [], total: 0 });
     });
 
-    it('should get all workplaces', async () => {
+    it('should get all shifts', async () => {
       const workplace1: CreateWorkplaceDto = {
         name: `1 - ${faker.company.name()}`,
         address1: faker.location.streetAddress(),
@@ -124,7 +124,7 @@ describe('Workplaces (e2e)', () => {
       await db.insert(schema.WorkplacesTable).values([workplace1, workplace2]);
 
       return request(app.getHttpServer())
-        .get('/workplaces')
+        .get('/shifts')
         .expect(200)
         .expect((response) => {
           expect(response.body.data).toMatchObject([workplace1, workplace2]);
@@ -132,8 +132,8 @@ describe('Workplaces (e2e)', () => {
         });
     });
 
-    it('should get workplace by id', async () => {
-      const workplace: CreateWorkplaceDto = {
+    it('should get shift by id', async () => {
+      const shift: CreateWorkplaceDto = {
         name: faker.company.name(),
         address1: faker.location.streetAddress(),
         city: faker.location.city(),
@@ -144,33 +144,33 @@ describe('Workplaces (e2e)', () => {
 
       const created = await db
         .insert(schema.WorkplacesTable)
-        .values(workplace)
+        .values(shift)
         .returning({ id: schema.WorkplacesTable.id });
 
       const id = created[0].id;
 
       return request(app.getHttpServer())
-        .get(`/workplaces/${id}`)
+        .get(`/shifts/${id}`)
         .expect(200)
         .expect((response) => {
           expect(response.body).toMatchObject({
-            ...workplace,
+            ...shift,
             id,
           });
         });
     });
 
-    it("should not find workplace if id doesn't exist", () => {
+    it("should not find shift if id doesn't exist", () => {
       const id = faker.string.uuid();
 
-      return request(app.getHttpServer()).get(`/workplaces/${id}`).expect(404);
+      return request(app.getHttpServer()).get(`/shifts/${id}`).expect(404);
     });
 
     it('should fail with invalid id', () => {
       const id = 'invalid-uuid';
 
       return request(app.getHttpServer())
-        .get(`/workplaces/${id}`)
+        .get(`/shifts/${id}`)
         .expect(400)
         .expect((response) => {
           expect(response.body.message).toBe(
@@ -181,8 +181,8 @@ describe('Workplaces (e2e)', () => {
   });
 
   describe('PATCH', () => {
-    it('should update a workplace', async () => {
-      const workplace: CreateWorkplaceDto = {
+    it('should update a shift', async () => {
+      const shift: CreateWorkplaceDto = {
         name: faker.company.name(),
         address1: faker.location.streetAddress(),
         city: faker.location.city(),
@@ -193,7 +193,7 @@ describe('Workplaces (e2e)', () => {
 
       const created = await db
         .insert(schema.WorkplacesTable)
-        .values(workplace)
+        .values(shift)
         .returning({ id: schema.WorkplacesTable.id });
 
       const id = created[0].id;
@@ -201,8 +201,8 @@ describe('Workplaces (e2e)', () => {
       const address2 = faker.location.streetAddress();
 
       return await request(app.getHttpServer())
-        .patch(`/workplaces/${id}`)
-        .send({ ...workplace, address2 })
+        .patch(`/shifts/${id}`)
+        .send({ ...shift, address2 })
         .expect(200)
         .expect(async (_) => {
           const records = await db
@@ -217,10 +217,10 @@ describe('Workplaces (e2e)', () => {
         });
     });
 
-    it('should fail to update a workplace without required property', () => {
+    it('should fail to update a shift without required property', () => {
       const id = faker.string.uuid();
 
-      const workplace = {
+      const shift = {
         name: faker.company.name(),
         address1: faker.location.streetAddress(),
         city: faker.location.city(),
@@ -229,8 +229,8 @@ describe('Workplaces (e2e)', () => {
       };
 
       return request(app.getHttpServer())
-        .patch(`/workplaces/${id}`)
-        .send(workplace)
+        .patch(`/shifts/${id}`)
+        .send(shift)
         .expect(400)
         .expect((response) => {
           expect(response.body.message).toContain("Required: 'state'");
@@ -240,7 +240,7 @@ describe('Workplaces (e2e)', () => {
     it('should fail with invalid id', () => {
       const id = 'invalid-uuid';
 
-      const workplace = {
+      const shift = {
         name: faker.company.name(),
         address1: faker.location.streetAddress(),
         city: faker.location.city(),
@@ -250,8 +250,8 @@ describe('Workplaces (e2e)', () => {
       };
 
       return request(app.getHttpServer())
-        .patch(`/workplaces/${id}`)
-        .send(workplace)
+        .patch(`/shifts/${id}`)
+        .send(shift)
         .expect(400)
         .expect((response) => {
           expect(response.body.message).toBe(
@@ -262,8 +262,8 @@ describe('Workplaces (e2e)', () => {
   });
 
   describe('DELETE', () => {
-    it('should delete a workplace', async () => {
-      const workplace: CreateWorkplaceDto = {
+    it('should delete a shift', async () => {
+      const shift: CreateWorkplaceDto = {
         name: faker.company.name(),
         address1: faker.location.streetAddress(),
         city: faker.location.city(),
@@ -274,29 +274,25 @@ describe('Workplaces (e2e)', () => {
 
       const created = await db
         .insert(schema.WorkplacesTable)
-        .values(workplace)
+        .values(shift)
         .returning({ id: schema.WorkplacesTable.id });
 
       const id = created[0].id;
 
-      return request(app.getHttpServer())
-        .delete(`/workplaces/${id}`)
-        .expect(204);
+      return request(app.getHttpServer()).delete(`/shifts/${id}`).expect(204);
     });
 
-    it("should fail to delete a workplace if id doesn't exist", () => {
+    it("should fail to delete a shift if id doesn't exist", () => {
       const id = faker.string.uuid();
 
-      return request(app.getHttpServer())
-        .delete(`/workplaces/${id}`)
-        .expect(404);
+      return request(app.getHttpServer()).delete(`/shifts/${id}`).expect(404);
     });
 
     it('should fail with invalid id', () => {
       const id = 'invalid-uuid';
 
       return request(app.getHttpServer())
-        .delete(`/workplaces/${id}`)
+        .delete(`/shifts/${id}`)
         .expect(400)
         .expect((response) => {
           expect(response.body.message).toBe(
