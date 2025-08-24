@@ -8,4 +8,6 @@ export default defineConfig({
   dbCredentials: {
     url: process.env.NEON_DATABASE_URL!,
   },
+  verbose: true,
+  strict: true,
 });

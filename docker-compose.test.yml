@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  test-app:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    environment:
+      - NODE_ENV=test
+      - NEON_DATABASE_URL=postgresql://postgres:password@test-postgres:5432/roaming_health_test
+    depends_on:
+      test-postgres:
+        condition: service_healthy
+    volumes:
+      - .:/app
+      - /app/node_modules
+    working_dir: /app
+    command: pnpm run test:e2e
+    networks:
+      - test-network
+
+  test-postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: roaming_health_test
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5433:5432"
+    tmpfs:
+      - /var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - test-network
+
+networks:
+  test-network:
+    driver: bridge

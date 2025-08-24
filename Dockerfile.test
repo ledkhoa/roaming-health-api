@@ -1,0 +1,27 @@
+# Test Dockerfile - includes dev dependencies for running tests
+FROM node:20-alpine
+
+# Install pnpm
+RUN npm install -g pnpm
+
+WORKDIR /app
+
+# Copy package files
+COPY package.json pnpm-lock.yaml ./
+
+# Install all dependencies (including dev dependencies)
+RUN pnpm install --frozen-lockfile
+
+# Copy source code
+COPY . .
+
+# Create non-root user
+RUN addgroup -g 1001 -S nodejs
+RUN adduser -S nestjs -u 1001
+
+# Change ownership of the app directory
+RUN chown -R nestjs:nodejs /app
+USER nestjs
+
+# Default command (can be overridden)
+CMD ["pnpm", "run", "test:e2e"]

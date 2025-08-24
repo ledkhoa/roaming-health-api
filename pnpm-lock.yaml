@@ -34,10 +34,13 @@ importers:
         version: 16.4.7
       drizzle-orm:
         specifier: ^0.40.0
-        version: 0.40.0(@electric-sql/pglite@0.2.17)(@neondatabase/serverless@0.10.4)(@types/pg@8.11.6)(gel@2.0.1)
+        version: 0.40.0(@electric-sql/pglite@0.2.17)(@neondatabase/serverless@0.10.4)(@types/pg@8.15.5)(gel@2.0.1)(postgres@3.4.7)
       drizzle-seed:
         specifier: ^0.3.1
-        version: 0.3.1(drizzle-orm@0.40.0(@electric-sql/pglite@0.2.17)(@neondatabase/serverless@0.10.4)(@types/pg@8.11.6)(gel@2.0.1))
+        version: 0.3.1(drizzle-orm@0.40.0(@electric-sql/pglite@0.2.17)(@neondatabase/serverless@0.10.4)(@types/pg@8.15.5)(gel@2.0.1)(postgres@3.4.7))
+      postgres:
+        specifier: ^3.4.5
+        version: 3.4.7
       reflect-metadata:
         specifier: ^0.2.2
         version: 0.2.2
@@ -81,6 +84,9 @@ importers:
       '@types/node':
         specifier: ^22.10.7
         version: 22.13.10
+      '@types/pg':
+        specifier: ^8.11.10
+        version: 8.15.5
       '@types/supertest':
         specifier: ^6.0.2
         version: 6.0.2
@@ -1474,6 +1480,9 @@ packages:
 
   '@types/pg@8.11.6':
     resolution: {integrity: sha512-/2WmmBXHLsfRqzfHW7BNZ8SbYzE8OSk7i3WjFYvfgRHj7S1xj+16Je5fUKv3lVdVzk/zn9TXOqf+avFCFIE0yQ==}
+
+  '@types/pg@8.15.5':
+    resolution: {integrity: sha512-LF7lF6zWEKxuT3/OR8wAZGzkg4ENGXFNyiV/JeOt9z5B+0ZVwbql9McqX5c/WStFq1GaGso7H1AzP/qSzmlCKQ==}
 
   '@types/qs@6.9.18':
     resolution: {integrity: sha512-kK7dgTYDyGqS+e2Q4aK9X3D7q234CIZ1Bv0q/7Z5IwRDoADNU81xXJK/YVyLbLTZCoIwUoDoffFeF+p/eIklAA==}
@@ -3336,6 +3345,10 @@ packages:
   pg-protocol@1.7.1:
     resolution: {integrity: sha512-gjTHWGYWsEgy9MsY0Gp6ZJxV24IjDqdpTW7Eh0x+WfJLFsm/TJx1MzL6T0D88mBvkpxotCQ6TwW6N+Kko7lhgQ==}
 
+  pg-types@2.2.0:
+    resolution: {integrity: sha512-qTAAlrEsl8s4OiEQY69wDvcMIdQN6wdz5ojQiOy6YRMuynxenON0O5oCpJI6lshc6scgAY8qvJ2On/p+CXY0GA==}
+    engines: {node: '>=4'}
+
   pg-types@4.0.2:
     resolution: {integrity: sha512-cRL3JpS3lKMGsKaWndugWQoLOCoP+Cic8oseVcbr0qhPzYD5DWXK+RZ9LY9wxRf7RQia4SCwQlXk0q6FCPrVng==}
     engines: {node: '>=10'}
@@ -3366,17 +3379,33 @@ packages:
     resolution: {integrity: sha512-Nc3IT5yHzflTfbjgqWcCPpo7DaKy4FnpB0l/zCAW0Tc7jxAiuqSxHasntB3D7887LSrA93kDJ9IXovxJYxyLCA==}
     engines: {node: '>=4'}
 
+  postgres-array@2.0.0:
+    resolution: {integrity: sha512-VpZrUqU5A69eQyW2c5CA1jtLecCsN2U/bD6VilrFDWq5+5UIEVO7nazS3TEcHf1zuPYO/sqGvUvW62g86RXZuA==}
+    engines: {node: '>=4'}
+
   postgres-array@3.0.4:
     resolution: {integrity: sha512-nAUSGfSDGOaOAEGwqsRY27GPOea7CNipJPOA7lPbdEpx5Kg3qzdP0AaWC5MlhTWV9s4hFX39nomVZ+C4tnGOJQ==}
     engines: {node: '>=12'}
+
+  postgres-bytea@1.0.0:
+    resolution: {integrity: sha512-xy3pmLuQqRBZBXDULy7KbaitYqLcmxigw14Q5sj8QBVLqEwXfeybIKVWiqAXTlcvdvb0+xkOtDbfQMOf4lST1w==}
+    engines: {node: '>=0.10.0'}
 
   postgres-bytea@3.0.0:
     resolution: {integrity: sha512-CNd4jim9RFPkObHSjVHlVrxoVQXz7quwNFpz7RY1okNNme49+sVyiTvTRobiLV548Hx/hb1BG+iE7h9493WzFw==}
     engines: {node: '>= 6'}
 
+  postgres-date@1.0.7:
+    resolution: {integrity: sha512-suDmjLVQg78nMK2UZ454hAG+OAW+HQPZ6n++TNDUX+L0+uUlLywnoxJKDou51Zm+zTCjrCl0Nq6J9C5hP9vK/Q==}
+    engines: {node: '>=0.10.0'}
+
   postgres-date@2.1.0:
     resolution: {integrity: sha512-K7Juri8gtgXVcDfZttFKVmhglp7epKb1K4pgrkLxehjqkrgPhfG6OO8LHLkfaqkbpjNRnra018XwAr1yQFWGcA==}
     engines: {node: '>=12'}
+
+  postgres-interval@1.2.0:
+    resolution: {integrity: sha512-9ZhXKM/rw350N1ovuWHbGxnGh/SNJ4cnxHiM0rxE4VN41wsg8P8zWn9hv/buK00RP4WvlOyr/RBDiptyxVbkZQ==}
+    engines: {node: '>=0.10.0'}
 
   postgres-interval@3.0.0:
     resolution: {integrity: sha512-BSNDnbyZCXSxgA+1f5UU2GmwhoI0aU5yMxRGO8CdFEcY2BQF9xm/7MqKnYoM1nJDk8nONNWDk9WeSmePFhQdlw==}
@@ -3384,6 +3413,10 @@ packages:
 
   postgres-range@1.1.4:
     resolution: {integrity: sha512-i/hbxIE9803Alj/6ytL7UHQxRvZkI9O4Sy+J3HGc4F4oo/2eQAjTSNJ0bfxyse3bH0nuVesCk+3IRLaMtG3H6w==}
+
+  postgres@3.4.7:
+    resolution: {integrity: sha512-Jtc2612XINuBjIl/QTWsV5UvE8UHuNblcO3vVADSrKsrc6RqGX6lOW1cEo3CM2v0XG4Nat8nI+YM7/f26VxXLw==}
+    engines: {node: '>=12'}
 
   prelude-ls@1.2.1:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}
@@ -5327,6 +5360,12 @@ snapshots:
       pg-protocol: 1.7.1
       pg-types: 4.0.2
 
+  '@types/pg@8.15.5':
+    dependencies:
+      '@types/node': 22.13.10
+      pg-protocol: 1.7.1
+      pg-types: 2.2.0
+
   '@types/qs@6.9.18': {}
 
   '@types/range-parser@1.2.7': {}
@@ -6060,18 +6099,19 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  drizzle-orm@0.40.0(@electric-sql/pglite@0.2.17)(@neondatabase/serverless@0.10.4)(@types/pg@8.11.6)(gel@2.0.1):
+  drizzle-orm@0.40.0(@electric-sql/pglite@0.2.17)(@neondatabase/serverless@0.10.4)(@types/pg@8.15.5)(gel@2.0.1)(postgres@3.4.7):
     optionalDependencies:
       '@electric-sql/pglite': 0.2.17
       '@neondatabase/serverless': 0.10.4
-      '@types/pg': 8.11.6
+      '@types/pg': 8.15.5
       gel: 2.0.1
+      postgres: 3.4.7
 
-  drizzle-seed@0.3.1(drizzle-orm@0.40.0(@electric-sql/pglite@0.2.17)(@neondatabase/serverless@0.10.4)(@types/pg@8.11.6)(gel@2.0.1)):
+  drizzle-seed@0.3.1(drizzle-orm@0.40.0(@electric-sql/pglite@0.2.17)(@neondatabase/serverless@0.10.4)(@types/pg@8.15.5)(gel@2.0.1)(postgres@3.4.7)):
     dependencies:
       pure-rand: 6.1.0
     optionalDependencies:
-      drizzle-orm: 0.40.0(@electric-sql/pglite@0.2.17)(@neondatabase/serverless@0.10.4)(@types/pg@8.11.6)(gel@2.0.1)
+      drizzle-orm: 0.40.0(@electric-sql/pglite@0.2.17)(@neondatabase/serverless@0.10.4)(@types/pg@8.15.5)(gel@2.0.1)(postgres@3.4.7)
 
   dunder-proto@1.0.1:
     dependencies:
@@ -7420,6 +7460,14 @@ snapshots:
 
   pg-protocol@1.7.1: {}
 
+  pg-types@2.2.0:
+    dependencies:
+      pg-int8: 1.0.1
+      postgres-array: 2.0.0
+      postgres-bytea: 1.0.0
+      postgres-date: 1.0.7
+      postgres-interval: 1.2.0
+
   pg-types@4.0.2:
     dependencies:
       pg-int8: 1.0.1
@@ -7448,17 +7496,29 @@ snapshots:
 
   pluralize@8.0.0: {}
 
+  postgres-array@2.0.0: {}
+
   postgres-array@3.0.4: {}
+
+  postgres-bytea@1.0.0: {}
 
   postgres-bytea@3.0.0:
     dependencies:
       obuf: 1.1.2
 
+  postgres-date@1.0.7: {}
+
   postgres-date@2.1.0: {}
+
+  postgres-interval@1.2.0:
+    dependencies:
+      xtend: 4.0.2
 
   postgres-interval@3.0.0: {}
 
   postgres-range@1.1.4: {}
+
+  postgres@3.4.7: {}
 
   prelude-ls@1.2.1: {}
 

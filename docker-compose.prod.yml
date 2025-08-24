@@ -1,0 +1,18 @@
+# docker-compose.prod.yml
+# Production overrides for docker-compose.yml
+# Usage: docker-compose -f docker-compose.yml -f docker-compose.prod.yml up
+
+version: '3.8'
+
+services:
+  app:
+    restart: always
+    environment:
+      - NODE_ENV=production
+      # Remove this line and set NEON_DATABASE_URL to your production database
+      # - NEON_DATABASE_URL=your_production_database_url
+    # Remove depends_on for production if using external database
+    # depends_on: []
+    
+  # Remove postgres service for production if using external database
+  # postgres: null
